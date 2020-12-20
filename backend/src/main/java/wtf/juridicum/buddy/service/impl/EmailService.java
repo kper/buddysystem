@@ -28,15 +28,39 @@ public class EmailService implements IEmailService {
         SimpleMailMessage mail = new SimpleMailMessage();
         mail.setFrom("admin@juridicum.wtf");
         mail.setTo(req.getEmail());
-        mail.setSubject("Juridicum.wtf Buddy-Request Bestätigung");
+        mail.setSubject("Buddy-Request Bestätigung");
 
-        DateTimeFormatter fmt = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM) ;
+        DateTimeFormatter fmt = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
 
         mail.setText("Hallo,\n\n" +
                 "folgendes wurde erfasst: \n\n" +
                 "1. Email " + req.getEmail() + "\n" +
-                "2. LVA " + req.getCourse().getName() + "\n" +
-                "3. Datum " + req.getExamDate().format(fmt));
+                "2. LVA \"" + req.getCourse().getName() + "\"\n" +
+                "3. Prüfungsdatum " + req.getExamDate().format(fmt) + "\n\n" +
+                "Wir suchen dir eine/n PrüfungspartnerIn. Wir melden uns wieder.\n\n" +
+                "Öffne die Seite https://juridicum.wtf/buddyrequest/" + req.getId() + "?token=" +
+                req.getToken() + " um deine Anfrage zu löschen. Nach dem " + req.getExamDate().format(fmt) +
+                " wird sie automatisch gelöscht.");
+
+        emailSender.send(mail);
+    }
+
+    @Override
+    public void sendDeleteConfirmationEmail(BuddyRequest req) {
+        LOGGER.info("Sending removal confirmation for {}", req.getEmail());
+
+        SimpleMailMessage mail = new SimpleMailMessage();
+        mail.setFrom("admin@juridicum.wtf");
+        mail.setTo(req.getEmail());
+        mail.setSubject("Buddy-Request Lösch-Bestätigung");
+
+        DateTimeFormatter fmt = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
+
+        mail.setText("Hallo,\n\n" +
+                "1. Email " + req.getEmail() + "\n" +
+                "2. LVA \"" + req.getCourse().getName() + "\"\n" +
+                "3. Prüfungsdatum " + req.getExamDate().format(fmt) + "\n\n" +
+                "Deine Anfrage wurde gelöscht.");
 
         emailSender.send(mail);
     }

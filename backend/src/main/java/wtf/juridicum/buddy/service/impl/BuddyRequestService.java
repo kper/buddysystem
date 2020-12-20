@@ -10,14 +10,12 @@ import wtf.juridicum.buddy.exception.NotFoundException;
 import wtf.juridicum.buddy.repository.BuddyRequestRepository;
 import wtf.juridicum.buddy.repository.CourseRepository;
 import wtf.juridicum.buddy.service.IBuddyRequestService;
-import wtf.juridicum.buddy.service.ICourseService;
 import wtf.juridicum.buddy.service.IEmailService;
 
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -68,6 +66,7 @@ public class BuddyRequestService implements IBuddyRequestService {
 
         if (req.isPresent()) {
             buddyRequestRepository.delete(req.get());
+            this.emailService.sendDeleteConfirmationEmail(req.get());
         }
     }
 }

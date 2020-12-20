@@ -9,4 +9,6 @@ public interface IEmailService {
      * @param req is the corresponding buddy request
      */
     void sendRegistration(BuddyRequest req);
+
+    void sendDeleteConfirmationEmail(BuddyRequest buddyRequest);
 }
