@@ -61,7 +61,6 @@ public class BuddyRequestEndpoint implements TestData {
     @Test
     public void whenCreatingRequestThenCorrect() throws Exception {
         BuddyRequest req = TestData.getBuddyRequest();
-        buddyRequestRepository.save(req);
 
         BuddyRequestDto dto = buddyRequestMapper.map(req);
         String body = objectMapper.writeValueAsString(dto);
@@ -80,6 +79,7 @@ public class BuddyRequestEndpoint implements TestData {
                 .readValue(response.getContentAsString(), BuddyRequestDto.class);
 
         assertNotNull(messageResponse.getId(), "Response should have an id");
+        assertNotNull(messageResponse.getOnCreate(), "Response should have a create date");
         assertEquals(req.getEmail(), messageResponse.getEmail(), "Response should have the same email");
 
     }

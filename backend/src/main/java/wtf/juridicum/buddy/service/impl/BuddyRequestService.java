@@ -12,6 +12,7 @@ import wtf.juridicum.buddy.service.ICourseService;
 
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -29,6 +30,7 @@ public class BuddyRequestService implements IBuddyRequestService {
     @Override
     @Transactional
     public BuddyRequest create(BuddyRequest request) {
+        request.setOnCreate(LocalDateTime.now());
         buddyRequestRepository.save(request);
 
         return request;
