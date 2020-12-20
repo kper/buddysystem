@@ -14,7 +14,7 @@ public interface IBuddyRequestService {
     BuddyRequest create(BuddyRequest request, Long courseId);
 
     /**
-     * Deletes a buddy request with `id` when `token` is correct
+     * Deletes a buddy request with `id` when `token` is correct and sends an email
      * @param id identifies a request
      * @param token is a secret for deletion
      */

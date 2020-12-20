@@ -39,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @ActiveProfiles("test")
 @Transactional
 @AutoConfigureMockMvc
-public class BuddyRequestEndpoint implements TestData {
+public class BuddyRequestEndpointTest implements TestData {
     private static final String BUDDY_REQUEST_URL = "/api/v1/buddyrequest";
 
     @Autowired
@@ -116,4 +116,44 @@ public class BuddyRequestEndpoint implements TestData {
         assertTrue(buddyRequestRepository.findById(req.getId()).isEmpty(), "Buddy request should not exist anymore");
     }
 
+    @Test
+    public void givenTwoBuddiesThenCreateCorrect() throws Exception {
+        Course course = TestData.getCourse();
+        courseRepository.save(course);
+
+        BuddyRequest req1 = TestData.getBuddyRequest();
+        BuddyRequest req2 = TestData.getBuddyRequest();
+        req2.setEmail("toni@email.com");
+
+
+        CreateBuddyRequestDto dto1 = buddyRequestMapper.map2(req1);
+        dto1.setCourseId(course.getId());
+        String body1 = objectMapper.writeValueAsString(dto1);
+
+        MvcResult mvcResult1 = this.mockMvc.perform(post(BUDDY_REQUEST_URL + "/")
+                .content(body1)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andReturn();
+        MockHttpServletResponse response1 = mvcResult1.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response1.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response1.getContentType());
+
+        // req 2
+
+        CreateBuddyRequestDto dto2 = buddyRequestMapper.map2(req2);
+        dto2.setCourseId(course.getId());
+        String body2 = objectMapper.writeValueAsString(dto2);
+
+        MvcResult mvcResult2 = this.mockMvc.perform(post(BUDDY_REQUEST_URL + "/")
+                .content(body2)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andReturn();
+        MockHttpServletResponse response2 = mvcResult2.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response2.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response2.getContentType());
+    }
 }

@@ -1,6 +1,7 @@
 package wtf.juridicum.buddy.service;
 
 import wtf.juridicum.buddy.entity.BuddyRequest;
+import wtf.juridicum.buddy.entity.Match;
 
 public interface IEmailService {
     /**
@@ -10,5 +11,15 @@ public interface IEmailService {
      */
     void sendRegistration(BuddyRequest req);
 
+    /**
+     * Send a confirmation for removing a buddy request.
+     * @param buddyRequest is the corresponding buddy request
+     */
     void sendDeleteConfirmationEmail(BuddyRequest buddyRequest);
+
+    /**
+     * Inform both buddies about the match.
+     * @param match
+     */
+    void sendMatchConfirmation(Match match);
 }

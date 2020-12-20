@@ -24,7 +24,6 @@ public class BuddyRequest {
     @Column(nullable = false)
     private String email;
 
-
     @Column(nullable = false, name = "onCreate", columnDefinition = "DATE")
     private LocalDateTime onCreate;
 

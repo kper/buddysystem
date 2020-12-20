@@ -7,6 +7,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import wtf.juridicum.buddy.entity.BuddyRequest;
+import wtf.juridicum.buddy.entity.Match;
 import wtf.juridicum.buddy.service.IEmailService;
 
 import java.lang.invoke.MethodHandles;
@@ -63,5 +64,29 @@ public class EmailService implements IEmailService {
                 "Deine Anfrage wurde gelöscht.");
 
         emailSender.send(mail);
+    }
+
+    private void sendMatchConfirmation(Match match, String person1, String person2) {
+        SimpleMailMessage mail = new SimpleMailMessage();
+        mail.setFrom("admin@juridicum.wtf");
+        mail.setTo(person1);
+        mail.setSubject("Match gefunden");
+
+        DateTimeFormatter fmt = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
+
+        mail.setText("Hallo,\n\n" +
+                "Für die Prüfung der LVA \"" + match.getCourse().getName() + "\" am " + match.getExamDate().format(fmt) + "\n" +
+                "wurde ein(e) PartnerIn gefunden. " + person2 + "\n\n" +
+                "Du solltest ihn/sie anschreiben!");
+
+        emailSender.send(mail);
+    }
+
+    @Override
+    public void sendMatchConfirmation(Match match) {
+        LOGGER.info("Sending match info to {} and {}", match.getBuddy1(), match.getBuddy2());
+
+        sendMatchConfirmation(match, match.getBuddy1(), match.getBuddy2());
+        sendMatchConfirmation(match, match.getBuddy2(), match.getBuddy1());
     }
 }

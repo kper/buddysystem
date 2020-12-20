@@ -6,11 +6,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import wtf.juridicum.buddy.entity.BuddyRequest;
 import wtf.juridicum.buddy.entity.Course;
+import wtf.juridicum.buddy.entity.Match;
 import wtf.juridicum.buddy.exception.NotFoundException;
 import wtf.juridicum.buddy.repository.BuddyRequestRepository;
 import wtf.juridicum.buddy.repository.CourseRepository;
 import wtf.juridicum.buddy.service.IBuddyRequestService;
 import wtf.juridicum.buddy.service.IEmailService;
+import wtf.juridicum.buddy.service.IMatchService;
 
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
@@ -26,16 +28,19 @@ public class BuddyRequestService implements IBuddyRequestService {
 
     private BuddyRequestRepository buddyRequestRepository;
     private CourseRepository courseRepository;
+    private IMatchService matchService;
     private IEmailService emailService;
 
     private final int TOKEN_LENGTH = 10;
 
     public BuddyRequestService(BuddyRequestRepository buddyRequestRepository,
                                CourseRepository courseRepository,
-                               IEmailService emailService) {
+                               IEmailService emailService,
+                               IMatchService matchService) {
         this.buddyRequestRepository = buddyRequestRepository;
         this.courseRepository = courseRepository;
         this.emailService = emailService;
+        this.matchService = matchService;
     }
 
     @Override
@@ -54,7 +59,10 @@ public class BuddyRequestService implements IBuddyRequestService {
         request.setCourse(course.get());
         buddyRequestRepository.save(request);
 
-        this.emailService.sendRegistration(request);
+        Optional<Match> match = matchService.checkMatchesAndCreate(request);
+        if(match.isEmpty()) {
+            this.emailService.sendRegistration(request);
+        }
 
         return request;
     }
@@ -62,10 +70,12 @@ public class BuddyRequestService implements IBuddyRequestService {
     @Override
     @Transactional
     public void deleteRequest(Long id, String token) {
+        LOGGER.info("Deleting request for {}", id);
         Optional<BuddyRequest> req = buddyRequestRepository.findBuddyRequestByIdAndToken(id, token);
 
         if (req.isPresent()) {
             buddyRequestRepository.delete(req.get());
+            LOGGER.debug("Sending confirmation email to {}", req.get().getEmail());
             this.emailService.sendDeleteConfirmationEmail(req.get());
         }
     }
