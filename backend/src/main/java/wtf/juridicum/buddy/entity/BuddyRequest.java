@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -28,4 +30,7 @@ public class BuddyRequest {
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Course course;
+
+    @Column(nullable = false, name="examDate", columnDefinition = "DATE")
+    private LocalDate examDate;
 }

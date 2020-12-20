@@ -3,6 +3,7 @@ package wtf.juridicum.buddy;
 import wtf.juridicum.buddy.entity.BuddyRequest;
 import wtf.juridicum.buddy.entity.Course;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +23,7 @@ public interface TestData {
     static BuddyRequest getBuddyRequest() {
         BuddyRequest req = new BuddyRequest();
         req.setEmail("buddy@email.com");
+        req.setExamDate(LocalDate.MAX);
         return req;
     }
 
