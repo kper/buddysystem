@@ -28,9 +28,9 @@ import wtf.juridicum.buddy.repository.CourseRepository;
 import javax.transaction.Transactional;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
@@ -95,4 +95,25 @@ public class BuddyRequestEndpoint implements TestData {
                 "Response should fetch the name of the course");
 
     }
+
+    @Test
+    public void givenIdAndTokenThenRemoveCorrect() throws Exception {
+        BuddyRequest req = TestData.getBuddyRequest();
+        req.setToken("test");
+
+        Course course = TestData.getCourse();
+        courseRepository.save(course);
+
+        req.setCourse(course);
+        buddyRequestRepository.save(req);
+
+        MvcResult mvcResult = this.mockMvc.perform(delete(BUDDY_REQUEST_URL + "/" + req.getId() + "?token=test"))
+                .andDo(print())
+                .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertTrue(buddyRequestRepository.findById(req.getId()).isEmpty(), "Buddy request should not exist anymore");
+    }
+
 }

@@ -12,4 +12,11 @@ public interface IBuddyRequestService {
      * @return the created request from the database.
      */
     BuddyRequest create(BuddyRequest request, Long courseId);
+
+    /**
+     * Deletes a buddy request with `id` when `token` is correct
+     * @param id identifies a request
+     * @param token is a secret for deletion
+     */
+    void deleteRequest(Long id, String token);
 }

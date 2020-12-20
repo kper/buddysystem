@@ -4,6 +4,7 @@ import wtf.juridicum.buddy.entity.BuddyRequest;
 import wtf.juridicum.buddy.entity.Course;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +25,7 @@ public interface TestData {
         BuddyRequest req = new BuddyRequest();
         req.setEmail("buddy@email.com");
         req.setExamDate(LocalDate.MAX);
+        req.setOnCreate(LocalDateTime.now());
         return req;
     }
 

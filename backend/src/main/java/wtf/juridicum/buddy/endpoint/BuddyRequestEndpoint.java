@@ -37,4 +37,11 @@ public class BuddyRequestEndpoint {
 
         return buddyRequestMapper.map(buddyRequestService.create(request, body.getCourseId()));
     }
+
+    @DeleteMapping(value = "/{id}")
+    public void deleteRequest(@PathVariable Long id, @RequestParam(value = "token", required = true) String token) {
+        LOGGER.info("DELETE /api/v1/buddyrequest/{id}", id);
+
+        buddyRequestService.deleteRequest(id, token);
+    }
 }

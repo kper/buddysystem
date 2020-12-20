@@ -33,4 +33,7 @@ public class BuddyRequest {
 
     @Column(nullable = false, name="examDate", columnDefinition = "DATE")
     private LocalDate examDate;
+
+    @Column(nullable = false, name = "token")
+    private String token;
 }
