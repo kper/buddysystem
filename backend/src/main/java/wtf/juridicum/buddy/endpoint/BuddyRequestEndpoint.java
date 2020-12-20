@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import wtf.juridicum.buddy.endpoint.dto.BuddyRequestDto;
 import wtf.juridicum.buddy.endpoint.dto.CourseDto;
+import wtf.juridicum.buddy.endpoint.dto.CreateBuddyRequestDto;
 import wtf.juridicum.buddy.endpoint.mapper.BuddyRequestMapper;
 import wtf.juridicum.buddy.endpoint.mapper.CourseMapper;
 import wtf.juridicum.buddy.entity.BuddyRequest;
@@ -30,10 +31,10 @@ public class BuddyRequestEndpoint {
     }
 
     @PostMapping
-    public BuddyRequestDto createRequest(@Valid @RequestBody BuddyRequestDto body) {
+    public BuddyRequestDto createRequest(@Valid @RequestBody CreateBuddyRequestDto body) {
         LOGGER.info("POST /api/v1/buddyrequest");
         BuddyRequest request =  buddyRequestMapper.map(body);
 
-        return buddyRequestMapper.map(buddyRequestService.create(request));
+        return buddyRequestMapper.map(buddyRequestService.create(request, body.getCourseId()));
     }
 }

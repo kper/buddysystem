@@ -24,4 +24,10 @@ public interface TestData {
         req.setEmail("buddy@email.com");
         return req;
     }
+
+    static Course getCourse() {
+        Course course = new Course();
+        course.setName("course");
+        return course;
+    }
 }

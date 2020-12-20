@@ -25,4 +25,7 @@ public class BuddyRequest {
 
     @Column(nullable = false, name = "onCreate", columnDefinition = "DATE")
     private LocalDateTime onCreate;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Course course;
 }

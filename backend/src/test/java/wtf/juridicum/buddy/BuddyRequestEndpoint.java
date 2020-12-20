@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import wtf.juridicum.buddy.endpoint.dto.BuddyRequestDto;
 import wtf.juridicum.buddy.endpoint.dto.CourseDto;
+import wtf.juridicum.buddy.endpoint.dto.CreateBuddyRequestDto;
 import wtf.juridicum.buddy.endpoint.mapper.BuddyRequestMapper;
 import wtf.juridicum.buddy.endpoint.mapper.CourseMapper;
 import wtf.juridicum.buddy.entity.BuddyRequest;
@@ -51,6 +52,9 @@ public class BuddyRequestEndpoint implements TestData {
     private BuddyRequestRepository buddyRequestRepository;
 
     @Autowired
+    private CourseRepository courseRepository;
+
+    @Autowired
     private ObjectMapper objectMapper;
 
     @BeforeEach
@@ -62,7 +66,11 @@ public class BuddyRequestEndpoint implements TestData {
     public void whenCreatingRequestThenCorrect() throws Exception {
         BuddyRequest req = TestData.getBuddyRequest();
 
-        BuddyRequestDto dto = buddyRequestMapper.map(req);
+        Course course = TestData.getCourse();
+        courseRepository.save(course);
+
+        CreateBuddyRequestDto dto = buddyRequestMapper.map2(req);
+        dto.setCourseId(course.getId());
         String body = objectMapper.writeValueAsString(dto);
 
         MvcResult mvcResult = this.mockMvc.perform(post(BUDDY_REQUEST_URL + "/")
@@ -81,6 +89,10 @@ public class BuddyRequestEndpoint implements TestData {
         assertNotNull(messageResponse.getId(), "Response should have an id");
         assertNotNull(messageResponse.getOnCreate(), "Response should have a create date");
         assertEquals(req.getEmail(), messageResponse.getEmail(), "Response should have the same email");
+        assertNotNull(messageResponse.getCourse().getId(), "Response's course should not be null");
+        assertEquals(course.getName(),
+                messageResponse.getCourse().getName(),
+                "Response should fetch the name of the course");
 
     }
 }
