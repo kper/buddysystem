@@ -10,6 +10,7 @@ import wtf.juridicum.buddy.repository.BuddyRequestRepository;
 import wtf.juridicum.buddy.repository.CourseRepository;
 import wtf.juridicum.buddy.service.IBuddyRequestService;
 import wtf.juridicum.buddy.service.ICourseService;
+import wtf.juridicum.buddy.service.IEmailService;
 
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
@@ -25,10 +26,14 @@ public class BuddyRequestService implements IBuddyRequestService {
 
     private BuddyRequestRepository buddyRequestRepository;
     private CourseRepository courseRepository;
+    private IEmailService emailService;
 
-    public BuddyRequestService(BuddyRequestRepository buddyRequestRepository, CourseRepository courseRepository) {
+    public BuddyRequestService(BuddyRequestRepository buddyRequestRepository,
+                               CourseRepository courseRepository,
+                               IEmailService emailService) {
         this.buddyRequestRepository = buddyRequestRepository;
         this.courseRepository = courseRepository;
+        this.emailService = emailService;
     }
 
     @Override
@@ -44,6 +49,8 @@ public class BuddyRequestService implements IBuddyRequestService {
 
         request.setCourse(course.get());
         buddyRequestRepository.save(request);
+
+        this.emailService.sendRegistration(request);
 
         return request;
     }
