@@ -1,5 +1,6 @@
 package wtf.juridicum.buddy;
 
+import wtf.juridicum.buddy.entity.BuddyRequest;
 import wtf.juridicum.buddy.entity.Course;
 
 import java.util.ArrayList;
@@ -16,5 +17,11 @@ public interface TestData {
         }
 
         return courses;
+    }
+
+    static BuddyRequest getBuddyRequest() {
+        BuddyRequest req = new BuddyRequest();
+        req.setEmail("buddy@email.com");
+        return req;
     }
 }
