@@ -31,8 +31,8 @@ public class EmailService implements IEmailService {
         mail.setTo(req.getEmail());
         mail.setSubject("Buddy-Request Email bestätigen");
         mail.setText("Hallo,\n\n" +
-                "Öffne die Seite \"https://juridicum.wtf/confirm/" + req.getId() + "?token=" +
-                req.getToken() + "\" um deine Email zu bestätigen.");
+                "Öffne die Seite https://juridicum.wtf/confirm/" + req.getId() + "?token=" +
+                req.getToken() + " um deine Email zu bestätigen.");
 
         emailSender.send(mail);
     }

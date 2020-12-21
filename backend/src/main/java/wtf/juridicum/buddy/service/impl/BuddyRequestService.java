@@ -57,6 +57,11 @@ public class BuddyRequestService implements IBuddyRequestService {
             throw new NotFoundException("Course not found");
         }
 
+        if (buddyRequestRepository.findBuddyRequestByEmailAndCourseAndExamDate(request.getEmail(),
+                course.get(), request.getExamDate()).isPresent()) {
+            throw new ValidationException("A request has been already made for this exam.");
+        }
+
         request.setCourse(course.get());
         buddyRequestRepository.save(request);
 
@@ -86,7 +91,7 @@ public class BuddyRequestService implements IBuddyRequestService {
         Optional<BuddyRequest> req = buddyRequestRepository.findBuddyRequestByIdAndToken(id, token);
 
         if (req.isPresent()) {
-            if(!req.get().isConfirmed()) {
+            if (!req.get().isConfirmed()) {
                 req.get().setConfirmed(true);
                 LOGGER.debug("Confirmation correct for {}", id);
 
@@ -97,12 +102,10 @@ public class BuddyRequestService implements IBuddyRequestService {
                 } else {
                     this.emailService.sendRegistration(req.get());
                 }
-            }
-            else {
+            } else {
                 throw new ValidationException("Already confirmed");
             }
-        }
-        else {
+        } else {
             throw new NotFoundException("Id with token doesn't match");
         }
     }

@@ -3,12 +3,13 @@
   <div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">
     {{ errorMsg }}
   </div>
+  <div class="centered">
+    <div *ngIf="isLoading">
+      Loading...
+    </div>
 
-  <div *ngIf="isLoading">
-    Loading...
-  </div>
-
-  <div *ngIf="!isLoading && success">
-    Passt, bestätigt
+    <div *ngIf="!isLoading && success">
+      Passt, bestätigt <i class="fa fa-check"></i>
+    </div>
   </div>
 </div>

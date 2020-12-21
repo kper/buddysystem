@@ -3,6 +3,7 @@ package wtf.juridicum.buddy;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,6 +109,42 @@ public class BuddyRequestEndpointTest implements TestData {
                 messageResponse.getCourse().getName(),
                 "Response should fetch the name of the course");
 
+    }
+
+    @Test
+    public void whenCreatingRequestTwiceThenValidationException() throws Exception {
+        BuddyRequest req = TestData.getBuddyRequest();
+        doNothing().when(emailService).requestConfirmEmail(req);
+
+        Course course = TestData.getCourse();
+        courseRepository.save(course);
+
+        CreateBuddyRequestDto dto = buddyRequestMapper.map2(req);
+        dto.setCourseId(course.getId());
+        String body = objectMapper.writeValueAsString(dto);
+
+        {
+            MvcResult mvcResult = this.mockMvc.perform(post(BUDDY_REQUEST_URL + "/")
+                    .content(body)
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andDo(print())
+                    .andReturn();
+            MockHttpServletResponse response = mvcResult.getResponse();
+
+            assertEquals(HttpStatus.OK.value(), response.getStatus());
+            assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+        }
+
+        {
+            MvcResult mvcResult = this.mockMvc.perform(post(BUDDY_REQUEST_URL + "/")
+                    .content(body)
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andDo(print())
+                    .andReturn();
+            MockHttpServletResponse response = mvcResult.getResponse();
+
+            assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), response.getStatus());
+        }
     }
 
     @Test

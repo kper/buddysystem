@@ -14,4 +14,6 @@ public interface BuddyRequestRepository extends JpaRepository<BuddyRequest, Long
     Optional<BuddyRequest> findBuddyRequestByIdAndToken(Long id, String token);
 
     List<BuddyRequest> findAllByCourseAndAndExamDateAndEmailNotAndConfirmedOrderByOnCreateAsc(Course course, LocalDate examDate, String initiator, boolean confirmed);
+
+    Optional<BuddyRequest> findBuddyRequestByEmailAndCourseAndExamDate(String email, Course course, LocalDate examDate);
 }
