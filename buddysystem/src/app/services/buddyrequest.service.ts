@@ -22,4 +22,8 @@ export class BuddyRequestService {
   public confirm(id: number, token: string): Observable<any> {
     return this.httpClient.put<any>(this.baseUri + '/' + id + '?token=' + token, null);
   }
+
+  public remove(id: any, token: any): Observable<any> {
+    return this.httpClient.delete(this.baseUri + '/' + id + '?token=' + token, null);
+  }
 }

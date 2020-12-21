@@ -9,13 +9,15 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import { SuccessComponent } from './success/success.component';
 import { BuddyrequestConfirmComponent } from './buddyrequest-confirm/buddyrequest-confirm.component';
+import {BuddyrequestClearComponent} from './buddyrequest-clear/buddyrequest-clear.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     BuddyrequestCreateComponent,
     SuccessComponent,
-    BuddyrequestConfirmComponent
+    BuddyrequestConfirmComponent,
+    BuddyrequestClearComponent
   ],
   imports: [
     BrowserModule,
