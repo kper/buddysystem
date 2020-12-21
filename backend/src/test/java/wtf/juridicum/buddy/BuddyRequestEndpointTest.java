@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -22,13 +23,19 @@ import wtf.juridicum.buddy.endpoint.mapper.BuddyRequestMapper;
 import wtf.juridicum.buddy.endpoint.mapper.CourseMapper;
 import wtf.juridicum.buddy.entity.BuddyRequest;
 import wtf.juridicum.buddy.entity.Course;
+import wtf.juridicum.buddy.entity.Match;
 import wtf.juridicum.buddy.repository.BuddyRequestRepository;
 import wtf.juridicum.buddy.repository.CourseRepository;
+import wtf.juridicum.buddy.repository.MatchRepository;
+import wtf.juridicum.buddy.service.IEmailService;
 
 import javax.transaction.Transactional;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -52,10 +59,16 @@ public class BuddyRequestEndpointTest implements TestData {
     private BuddyRequestRepository buddyRequestRepository;
 
     @Autowired
+    private MatchRepository matchRepository;
+
+    @Autowired
     private CourseRepository courseRepository;
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @MockBean
+    private IEmailService emailService; // the CI doesn't like it when we interact with apps outside the project
 
     @BeforeEach
     public void beforeEach() {
@@ -65,6 +78,7 @@ public class BuddyRequestEndpointTest implements TestData {
     @Test
     public void whenCreatingRequestThenCorrect() throws Exception {
         BuddyRequest req = TestData.getBuddyRequest();
+        doNothing().when(emailService).sendRegistration(req);
 
         Course course = TestData.getCourse();
         courseRepository.save(course);
@@ -100,6 +114,7 @@ public class BuddyRequestEndpointTest implements TestData {
     public void givenIdAndTokenThenRemoveCorrect() throws Exception {
         BuddyRequest req = TestData.getBuddyRequest();
         req.setToken("test");
+        doNothing().when(emailService).sendDeleteConfirmationEmail(req);
 
         Course course = TestData.getCourse();
         courseRepository.save(course);
@@ -124,7 +139,9 @@ public class BuddyRequestEndpointTest implements TestData {
         BuddyRequest req1 = TestData.getBuddyRequest();
         BuddyRequest req2 = TestData.getBuddyRequest();
         req2.setEmail("toni@email.com");
-
+        doNothing().when(emailService).sendRegistration(req1);
+        doNothing().when(emailService).sendRegistration(req2);
+        doNothing().when(emailService).sendMatchConfirmation(any(Match.class));
 
         CreateBuddyRequestDto dto1 = buddyRequestMapper.map2(req1);
         dto1.setCourseId(course.getId());
@@ -155,5 +172,17 @@ public class BuddyRequestEndpointTest implements TestData {
 
         assertEquals(HttpStatus.OK.value(), response2.getStatus());
         assertEquals(MediaType.APPLICATION_JSON_VALUE, response2.getContentType());
+
+        // Check if match exists
+
+        List<Match> matches = matchRepository.findAll();
+        assertTrue(!matches.isEmpty(), "Expecting a match");
+        assertEquals(req2.getEmail(), matches.get(0).getBuddy1(), "Expecting that buddy's email match");
+        assertEquals(req1.getEmail(), matches.get(0).getBuddy2(), "Expecting that buddy's email match");
+        assertNotNull(matches.get(0).getCourse(), "Expecting that a course exists");
+        assertEquals(course.getId(), matches.get(0).getCourse().getId(), "Expecting that course match");
+        assertEquals(course.getId(), matches.get(0).getCourse().getId(), "Expecting that course match");
+        assertEquals(req2.getExamDate(), matches.get(0).getExamDate(), "Expecting that exam dates match");
+        assertEquals(req1.getExamDate(), matches.get(0).getExamDate(), "Expecting that exam dates match");
     }
 }
