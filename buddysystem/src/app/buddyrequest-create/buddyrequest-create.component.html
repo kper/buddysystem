@@ -1,0 +1,58 @@
+<div class="wrapper">
+  <h3>PrüfungspartnerIn-Suche (alpha)</h3>
+
+  <div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">
+    {{ errorMsg }}
+    <button type="button" (click)="vanishError()" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="submit(form.value)">
+    <div class="form-group">
+      <label for="email" class="all-round">
+        Email
+      </label>
+      <input id="email" class="form-control" type="email" formControlName="email" placeholder="huber@gmail.com"/>
+      <small>Diese Email wird weitergeben.</small>
+      <div *ngIf="email.invalid && (email.dirty || email.touched)" class="error">
+        <small class="form-text text-danger" *ngIf="email.errors.required">
+          eine Email ist notwendig
+        </small>
+        <small class="form-text text-danger" *ngIf="email.errors.minlength && !email.errors.pattern">
+          eine Email muss mehr als drei Zeichen haben
+        </small>
+        <small class="form-text text-danger" *ngIf="email.errors.pattern">
+          eine Email darf nicht leer sein
+        </small>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="course" class="all-round">
+        LVA
+      </label>
+      <select class="form-control custom-select" formControlName="courseId" id="course">
+        <option *ngFor="let course of (courses | async)" ngValue="{{course.id}}">{{course.name}}</option>
+      </select>
+      <div *ngIf="courseId.invalid && (courseId.dirty || courseId.touched)" class="error">
+        <small class="form-text text-danger" *ngIf="courseId.errors.required">
+          eine Auswahl ist notwendig
+        </small>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="course" class="all-round">
+        Prüfungsdatum
+      </label>
+      <input id="examDate" class="form-control custom-date" type="date" formControlName="examDate"/>
+      <div *ngIf="examDate.invalid && (examDate.dirty || examDate.touched)" class="error">
+        <small class="form-text text-danger" *ngIf="examDate.errors.required">
+          eine Auswahl ist notwendig
+        </small>
+      </div>
+    </div>
+    <div class="form-group">
+      <button class="btn btn-primary" [disabled]="!form.valid">Abschicken</button>
+    </div>
+  </form>
+</div>
