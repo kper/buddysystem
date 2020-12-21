@@ -36,9 +36,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @ExtendWith(SpringExtension.class)
@@ -78,7 +76,7 @@ public class BuddyRequestEndpointTest implements TestData {
     @Test
     public void whenCreatingRequestThenCorrect() throws Exception {
         BuddyRequest req = TestData.getBuddyRequest();
-        doNothing().when(emailService).sendRegistration(req);
+        doNothing().when(emailService).requestConfirmEmail(req);
 
         Course course = TestData.getCourse();
         courseRepository.save(course);
@@ -108,6 +106,43 @@ public class BuddyRequestEndpointTest implements TestData {
                 messageResponse.getCourse().getName(),
                 "Response should fetch the name of the course");
 
+    }
+
+    @Test
+    public void whenCreatingRequestThenConfirmThenCorrect() throws Exception {
+        BuddyRequest req = TestData.getBuddyRequest();
+        doNothing().when(emailService).requestConfirmEmail(req);
+
+        Course course = TestData.getCourse();
+        courseRepository.save(course);
+
+        CreateBuddyRequestDto dto = buddyRequestMapper.map2(req);
+        dto.setCourseId(course.getId());
+        String body = objectMapper.writeValueAsString(dto);
+
+        MvcResult mvcResult = this.mockMvc.perform(post(BUDDY_REQUEST_URL + "/")
+                .content(body)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        BuddyRequestDto messageResponse = objectMapper
+                .readValue(response.getContentAsString(), BuddyRequestDto.class);
+
+        req = buddyRequestRepository.findById(messageResponse.getId()).get(); // we need the token
+
+        // Confirm
+
+        MvcResult mvcResult2 = this.mockMvc.perform(put(BUDDY_REQUEST_URL + "/" + messageResponse.getId() + "?token=" + req.getToken()))
+                .andDo(print())
+                .andReturn();
+        MockHttpServletResponse response2 = mvcResult2.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response2.getStatus());
     }
 
     @Test
@@ -141,6 +176,8 @@ public class BuddyRequestEndpointTest implements TestData {
         req2.setEmail("toni@email.com");
         doNothing().when(emailService).sendRegistration(req1);
         doNothing().when(emailService).sendRegistration(req2);
+        doNothing().when(emailService).requestConfirmEmail(req1);
+        doNothing().when(emailService).requestConfirmEmail(req2);
         doNothing().when(emailService).sendMatchConfirmation(any(Match.class));
 
         CreateBuddyRequestDto dto1 = buddyRequestMapper.map2(req1);
@@ -157,6 +194,11 @@ public class BuddyRequestEndpointTest implements TestData {
         assertEquals(HttpStatus.OK.value(), response1.getStatus());
         assertEquals(MediaType.APPLICATION_JSON_VALUE, response1.getContentType());
 
+        BuddyRequestDto messageResponse1 = objectMapper
+                .readValue(response1.getContentAsString(), BuddyRequestDto.class);
+
+        req1 = buddyRequestRepository.findById(messageResponse1.getId()).get(); // we need the token
+
         // req 2
 
         CreateBuddyRequestDto dto2 = buddyRequestMapper.map2(req2);
@@ -172,6 +214,31 @@ public class BuddyRequestEndpointTest implements TestData {
 
         assertEquals(HttpStatus.OK.value(), response2.getStatus());
         assertEquals(MediaType.APPLICATION_JSON_VALUE, response2.getContentType());
+
+        BuddyRequestDto messageResponse2 = objectMapper
+                .readValue(response2.getContentAsString(), BuddyRequestDto.class);
+
+        req2 = buddyRequestRepository.findById(messageResponse2.getId()).get(); // we need the token
+
+        // Confirm
+
+        {
+            MvcResult mvcResult = this.mockMvc.perform(put(BUDDY_REQUEST_URL + "/" + messageResponse1.getId() + "?token=" + req1.getToken()))
+                    .andDo(print())
+                    .andReturn();
+            MockHttpServletResponse response = mvcResult.getResponse();
+
+            assertEquals(HttpStatus.OK.value(), response.getStatus());
+        }
+
+        {
+            MvcResult mvcResult = this.mockMvc.perform(put(BUDDY_REQUEST_URL + "/" + messageResponse2.getId() + "?token=" + req2.getToken()))
+                    .andDo(print())
+                    .andReturn();
+            MockHttpServletResponse response = mvcResult.getResponse();
+
+            assertEquals(HttpStatus.OK.value(), response.getStatus());
+        }
 
         // Check if match exists
 

@@ -15,6 +15,7 @@ import wtf.juridicum.buddy.service.IEmailService;
 import wtf.juridicum.buddy.service.IMatchService;
 
 import javax.transaction.Transactional;
+import javax.validation.ValidationException;
 import java.lang.invoke.MethodHandles;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
@@ -59,10 +60,7 @@ public class BuddyRequestService implements IBuddyRequestService {
         request.setCourse(course.get());
         buddyRequestRepository.save(request);
 
-        Optional<Match> match = matchService.checkMatchesAndCreate(request);
-        if(match.isEmpty()) {
-            this.emailService.sendRegistration(request);
-        }
+        this.emailService.requestConfirmEmail(request);
 
         return request;
     }
@@ -77,6 +75,35 @@ public class BuddyRequestService implements IBuddyRequestService {
             buddyRequestRepository.delete(req.get());
             LOGGER.debug("Sending confirmation email to {}", req.get().getEmail());
             this.emailService.sendDeleteConfirmationEmail(req.get());
+        }
+    }
+
+    @Override
+    @Transactional
+    public void confirmEmail(Long id, String token) {
+        LOGGER.info("Confirming email for {}", id);
+
+        Optional<BuddyRequest> req = buddyRequestRepository.findBuddyRequestByIdAndToken(id, token);
+
+        if (req.isPresent()) {
+            if(!req.get().isConfirmed()) {
+                req.get().setConfirmed(true);
+                LOGGER.debug("Confirmation correct for {}", id);
+
+                // Matching
+                Optional<Match> match = matchService.checkMatchesAndCreate(req.get());
+                if (match.isEmpty()) {
+                    this.emailService.sendRegistration(req.get());
+                } else {
+                    this.emailService.sendRegistration(req.get());
+                }
+            }
+            else {
+                throw new ValidationException("Already confirmed");
+            }
+        }
+        else {
+            throw new NotFoundException("Id with token doesn't match");
         }
     }
 }

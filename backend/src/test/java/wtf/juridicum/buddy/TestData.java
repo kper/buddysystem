@@ -26,6 +26,7 @@ public interface TestData {
         req.setEmail("buddy@email.com");
         req.setExamDate(LocalDate.MAX);
         req.setOnCreate(LocalDateTime.now());
+        req.setConfirmed(false);
         return req;
     }
 

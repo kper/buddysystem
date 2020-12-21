@@ -23,6 +23,21 @@ public class EmailService implements IEmailService {
     private JavaMailSender emailSender;
 
     @Override
+    public void requestConfirmEmail(BuddyRequest req) {
+        LOGGER.info("Requesting email confirmation for {}", req.getEmail());
+
+        SimpleMailMessage mail = new SimpleMailMessage();
+        mail.setFrom("admin@juridicum.wtf");
+        mail.setTo(req.getEmail());
+        mail.setSubject("Buddy-Request Email bestätigen");
+        mail.setText("Hallo,\n\n" +
+                "\"Öffne die Seite https://juridicum.wtf/buddyrequest/\" + req.getId() + \"?token=\" +\n" +
+                req.getToken() + "\" um deine Email zu bestätigen.");
+        
+        emailSender.send(mail);
+    }
+
+    @Override
     public void sendRegistration(BuddyRequest req) {
         LOGGER.info("Sending registration confirmation for {}", req.getEmail());
 

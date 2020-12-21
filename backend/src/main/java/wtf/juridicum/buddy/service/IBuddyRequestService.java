@@ -1,6 +1,5 @@
 package wtf.juridicum.buddy.service;
 
-import wtf.juridicum.buddy.endpoint.dto.BuddyRequestDto;
 import wtf.juridicum.buddy.entity.BuddyRequest;
 
 public interface IBuddyRequestService {
@@ -14,9 +13,16 @@ public interface IBuddyRequestService {
     BuddyRequest create(BuddyRequest request, Long courseId);
 
     /**
-     * Deletes a buddy request with `id` when `token` is correct and sends an email
+     * Deletes a buddy request with `id` when `token` is correct and sends an email.
      * @param id identifies a request
      * @param token is a secret for deletion
      */
     void deleteRequest(Long id, String token);
+
+    /**
+     * Confirm that a email belongs to the `id`.
+     * @param id identifies the buddy request
+     * @param token is the shared secret
+     */
+    void confirmEmail(Long id, String token);
 }

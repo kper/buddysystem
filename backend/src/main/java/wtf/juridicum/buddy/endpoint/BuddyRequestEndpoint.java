@@ -2,6 +2,7 @@ package wtf.juridicum.buddy.endpoint;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import wtf.juridicum.buddy.endpoint.dto.BuddyRequestDto;
 import wtf.juridicum.buddy.endpoint.dto.CourseDto;
@@ -36,6 +37,14 @@ public class BuddyRequestEndpoint {
         BuddyRequest request =  buddyRequestMapper.map(body);
 
         return buddyRequestMapper.map(buddyRequestService.create(request, body.getCourseId()));
+    }
+
+    @PutMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void confirmEmail(@PathVariable Long id, @RequestParam(value = "token", required = true) String token) {
+        LOGGER.info("PUT /api/v1/buddyrequest/{id}", id);
+
+        buddyRequestService.confirmEmail(id, token);
     }
 
     @DeleteMapping(value = "/{id}")

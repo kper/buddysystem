@@ -46,7 +46,7 @@ public class MatchService implements IMatchService {
     public Optional<Match> checkMatchesAndCreate(BuddyRequest initiator) {
         LOGGER.info("check for matches, initiated by {}", initiator.getEmail());
         List<BuddyRequest> matches = buddyRequestRepository
-                .findAllByCourseAndAndExamDateAndIdNotOrderByOnCreateAsc(initiator.getCourse(), initiator.getExamDate(), initiator.getId());
+                .findAllByCourseAndAndExamDateAndEmailNotAndConfirmedOrderByOnCreateAsc(initiator.getCourse(), initiator.getExamDate(), initiator.getEmail(), true);
 
         if (matches.size() == 0) {
             LOGGER.info("No matches found");

@@ -5,6 +5,11 @@ import wtf.juridicum.buddy.entity.Match;
 
 public interface IEmailService {
     /**
+     * Send a Confirm email request for request to verify email.
+     */
+    void requestConfirmEmail(BuddyRequest req);
+
+    /**
      * Send a confirmation for registering a buddy request.
      * This email will be send to the defined email in `req.email`.
      * @param req is the corresponding buddy request

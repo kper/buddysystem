@@ -29,4 +29,7 @@ public class BuddyRequestDto {
     @NotNull
     @FutureOrPresent
     private LocalDate examDate;
+
+    @NotNull
+    private boolean confirmed;
 }

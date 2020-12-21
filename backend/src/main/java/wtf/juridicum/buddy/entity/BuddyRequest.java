@@ -35,4 +35,7 @@ public class BuddyRequest {
 
     @Column(nullable = false, name = "token")
     private String token;
+
+    @Column(nullable = false, name = "confirmed")
+    private boolean confirmed;
 }

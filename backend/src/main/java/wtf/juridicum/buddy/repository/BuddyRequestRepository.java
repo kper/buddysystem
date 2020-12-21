@@ -13,5 +13,5 @@ import java.util.Optional;
 public interface BuddyRequestRepository extends JpaRepository<BuddyRequest, Long> {
     Optional<BuddyRequest> findBuddyRequestByIdAndToken(Long id, String token);
 
-    List<BuddyRequest> findAllByCourseAndAndExamDateAndIdNotOrderByOnCreateAsc(Course course, LocalDate examDate, Long initiator);
+    List<BuddyRequest> findAllByCourseAndAndExamDateAndEmailNotAndConfirmedOrderByOnCreateAsc(Course course, LocalDate examDate, String initiator, boolean confirmed);
 }
