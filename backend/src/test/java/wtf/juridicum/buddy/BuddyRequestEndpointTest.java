@@ -71,6 +71,8 @@ public class BuddyRequestEndpointTest implements TestData {
     @BeforeEach
     public void beforeEach() {
         buddyRequestRepository.deleteAll();
+        courseRepository.deleteAll();
+        matchRepository.deleteAll();
     }
 
     @Test
@@ -198,6 +200,9 @@ public class BuddyRequestEndpointTest implements TestData {
                 .readValue(response1.getContentAsString(), BuddyRequestDto.class);
 
         req1 = buddyRequestRepository.findById(messageResponse1.getId()).get(); // we need the token
+        assertNotNull(req1.getToken());
+        assertFalse(req1.isConfirmed());
+        assertTrue(matchRepository.findAll().isEmpty());
 
         // req 2
 
@@ -219,6 +224,9 @@ public class BuddyRequestEndpointTest implements TestData {
                 .readValue(response2.getContentAsString(), BuddyRequestDto.class);
 
         req2 = buddyRequestRepository.findById(messageResponse2.getId()).get(); // we need the token
+        assertNotNull(req2.getToken());
+        assertFalse(req2.isConfirmed());
+        assertTrue(matchRepository.findAll().isEmpty());
 
         // Confirm
 
