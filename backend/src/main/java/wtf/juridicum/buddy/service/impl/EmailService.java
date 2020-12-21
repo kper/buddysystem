@@ -31,9 +31,9 @@ public class EmailService implements IEmailService {
         mail.setTo(req.getEmail());
         mail.setSubject("Buddy-Request Email bestätigen");
         mail.setText("Hallo,\n\n" +
-                "\"Öffne die Seite https://juridicum.wtf/buddyrequest/\" + req.getId() + \"?token=\" +\n" +
+                "Öffne die Seite \"https://juridicum.wtf/confirm/" + req.getId() + "?token=" +
                 req.getToken() + "\" um deine Email zu bestätigen.");
-        
+
         emailSender.send(mail);
     }
 
@@ -54,7 +54,7 @@ public class EmailService implements IEmailService {
                 "2. LVA \"" + req.getCourse().getName() + "\"\n" +
                 "3. Prüfungsdatum " + req.getExamDate().format(fmt) + "\n\n" +
                 "Wir suchen dir eine/n PrüfungspartnerIn. Wir melden uns wieder.\n\n" +
-                "Öffne die Seite https://juridicum.wtf/buddyrequest/" + req.getId() + "?token=" +
+                "Öffne die Seite https://juridicum.wtf/clear/" + req.getId() + "?token=" +
                 req.getToken() + " um deine Anfrage zu löschen. Nach dem " + req.getExamDate().format(fmt) +
                 " wird sie automatisch gelöscht.");
 
