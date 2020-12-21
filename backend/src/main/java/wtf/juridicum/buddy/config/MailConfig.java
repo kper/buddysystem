@@ -11,7 +11,7 @@ import java.util.Properties;
 public class MailConfig {
 
   /**
-   * Sets up a JavaMailSenderImpl with the values given in the application.properties file.
+   * Sets up a JavaMailSenderImpl with the values given in the application.yml file.
    * @return a JavaMailSenderImpl Bean
    */
   @Bean
