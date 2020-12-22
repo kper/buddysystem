@@ -12,7 +12,7 @@ import java.lang.invoke.MethodHandles;
 import java.util.logging.Logger;
 
 @Configuration
-@Profile({"datagen", "prod"})
+@Profile({"datagen"})
 public class DataGeneratorBean {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory
