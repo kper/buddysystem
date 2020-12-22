@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import javax.mail.MessagingException;
 import javax.validation.ValidationException;
 
 import org.h2.jdbc.JdbcSQLDataException;
@@ -60,6 +61,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         LOGGER.warn(ex.getMessage());
         return handleExceptionInternal(ex, "Database could not perform operation", new HttpHeaders(),
                 HttpStatus.UNPROCESSABLE_ENTITY, request);
+    }
+
+    /**
+     * Handle mail exceptions
+     */
+    @ExceptionHandler(value = {MessagingException.class})
+    protected ResponseEntity<Object> handleMail(MessagingException ex, WebRequest request) {
+        LOGGER.error(ex.toString());
+        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR,
+                request);
     }
 
     /**

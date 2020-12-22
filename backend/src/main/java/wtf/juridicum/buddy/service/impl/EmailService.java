@@ -27,7 +27,7 @@ public class EmailService implements IEmailService {
         LOGGER.info("Requesting email confirmation for {}", req.getEmail());
 
         SimpleMailMessage mail = new SimpleMailMessage();
-        mail.setFrom("admin@juridicum.wtf");
+        mail.setFrom("noreply@juridicum.wtf");
         mail.setTo(req.getEmail());
         mail.setSubject("Buddy-Request Email bestätigen");
         mail.setText("Hallo,\n\n" +
@@ -42,7 +42,7 @@ public class EmailService implements IEmailService {
         LOGGER.info("Sending registration confirmation for {}", req.getEmail());
 
         SimpleMailMessage mail = new SimpleMailMessage();
-        mail.setFrom("admin@juridicum.wtf");
+        mail.setFrom("noreply@juridicum.wtf");
         mail.setTo(req.getEmail());
         mail.setSubject("Buddy-Request Bestätigung");
 
@@ -66,7 +66,7 @@ public class EmailService implements IEmailService {
         LOGGER.info("Sending removal confirmation for {}", req.getEmail());
 
         SimpleMailMessage mail = new SimpleMailMessage();
-        mail.setFrom("admin@juridicum.wtf");
+        mail.setFrom("noreply@juridicum.wtf");
         mail.setTo(req.getEmail());
         mail.setSubject("Buddy-Request Lösch-Bestätigung");
 
@@ -83,7 +83,7 @@ public class EmailService implements IEmailService {
 
     private void sendMatchConfirmation(Match match, String person1, String person2) {
         SimpleMailMessage mail = new SimpleMailMessage();
-        mail.setFrom("admin@juridicum.wtf");
+        mail.setFrom("noreply@juridicum.wtf");
         mail.setTo(person1);
         mail.setSubject("Match gefunden");
 
