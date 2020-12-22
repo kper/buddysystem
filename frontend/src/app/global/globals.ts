@@ -1,8 +1,9 @@
 import {Injectable} from '@angular/core';
+import { environment } from './../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class Globals {
-  readonly backendUri: string = 'http://localhost:8080/api/v1';
+  readonly backendUri: string = environment.apiUrl;
 }
