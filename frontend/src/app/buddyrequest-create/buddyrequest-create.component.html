@@ -1,4 +1,7 @@
-<div class="wrapper">
+<div class="wrapper" *ngIf="isLoading">
+  Loading...
+</div>
+<div class="wrapper" *ngIf="!isLoading">
   <h3>PrüfungspartnerIn-Suche (alpha)</h3>
 
   <div *ngIf="error" class="alert alert-warning alert-dismissible fade show" role="alert">

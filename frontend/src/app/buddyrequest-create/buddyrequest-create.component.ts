@@ -18,6 +18,7 @@ export class BuddyrequestCreateComponent implements OnInit {
   error: boolean;
   errorMsg = '';
   courses: Observable<Course[]>;
+  isLoading: boolean = false;
 
   constructor(private formBuilder: FormBuilder, private buddyService: BuddyRequestService, private courseService: CourseService,
               private router: Router) {
@@ -52,8 +53,11 @@ export class BuddyrequestCreateComponent implements OnInit {
 
   public submit(data: CreateBuddyRequest): void {
     console.log('data', data);
+    this.isLoading = true;
+
     this.buddyService.create(data).subscribe((value) => {
       console.log('ok');
+      this.isLoading = false;
       this.router.navigate(['/success']);
     },
       (err) => this.defaultErrorHandler(err));
@@ -66,6 +70,7 @@ export class BuddyrequestCreateComponent implements OnInit {
 
   private defaultErrorHandler(error): Observable<any> {
     console.error(error);
+    this.isLoading = false;
     this.error = true;
     if (error.status === 0) {
       // If status is 0, the backend is probably down
