@@ -55,13 +55,13 @@
       </div>
     </div>
     <div class="form-check">
-      <input type="checkbox" id="privacy" class="form-check-input" (click)="toggle_privacy()"/>
+      <input type="checkbox" id="privacy" class="form-check-input" (change)="toggle_privacy()"/>
       <label for="privacy">
         Ich stimme der <a [routerLink]="['privacypolicy']"> Datenschutzerklärung</a> zu.
       </label>
     </div>
     <div class="form-group">
-      <button class="btn btn-primary" [disabled]="!form.valid && !isPrivacyAccepted">Abschicken</button>
+      <button class="btn btn-primary" [disabled]="!form.valid || !isPrivacyAccepted">Abschicken</button>
     </div>
   </form>
 </div>
