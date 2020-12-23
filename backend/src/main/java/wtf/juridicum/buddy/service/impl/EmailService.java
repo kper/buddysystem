@@ -55,7 +55,7 @@ public class EmailService implements IEmailService {
                 "3. Prüfungsdatum " + req.getExamDate().format(fmt) + "\n\n" +
                 "Wir suchen dir eine/n PrüfungspartnerIn. Wir melden uns wieder.\n\n" +
                 "Öffne die Seite https://juridicum.wtf/clear/" + req.getId() + "?token=" +
-                req.getToken() + " um deine Anfrage zu löschen. Nach dem " + req.getExamDate().format(fmt) +
+                req.getToken() + " um deine Anfrage zu löschen. Nachdem " + req.getExamDate().format(fmt) +
                 " wird sie automatisch gelöscht.");
 
         emailSender.send(mail);
