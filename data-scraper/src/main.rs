@@ -1,6 +1,7 @@
 use scraper::{Html, Selector};
 use std::fs::File;
 use std::io::Read;
+use std::collections::HashSet;
 
 fn main() {
     let mut content = String::new();
@@ -54,6 +55,11 @@ fn main() {
 
         results.push(format!("{}", link[0]));
     }
+
+    // DEDUP
+    
+    let set: HashSet<_> = results.drain(..).collect();
+    results.extend(set.into_iter());
 
     // PRINTING SQL
 
