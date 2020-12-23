@@ -98,9 +98,11 @@ public class BuddyRequestService implements IBuddyRequestService {
                 // Matching
                 Optional<Match> match = matchService.checkMatchesAndCreate(req.get());
                 if (match.isEmpty()) {
+                    LOGGER.info("No match found, therefore sending registration info");
                     this.emailService.sendRegistration(req.get());
-                } else {
-                    this.emailService.sendRegistration(req.get());
+                }
+                else {
+                    LOGGER.info("A match found, therefore *not* sending registration info");
                 }
             } else {
                 throw new ValidationException("Already confirmed");
