@@ -10,6 +10,8 @@ import {HttpClient, HttpClientModule} from '@angular/common/http';
 import { SuccessComponent } from './success/success.component';
 import { BuddyrequestConfirmComponent } from './buddyrequest-confirm/buddyrequest-confirm.component';
 import {BuddyrequestClearComponent} from './buddyrequest-clear/buddyrequest-clear.component';
+import { ImpressumComponent } from './impressum/impressum.component';
+import { PrivacypolicyComponent } from './privacypolicy/privacypolicy.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +19,9 @@ import {BuddyrequestClearComponent} from './buddyrequest-clear/buddyrequest-clea
     BuddyrequestCreateComponent,
     SuccessComponent,
     BuddyrequestConfirmComponent,
-    BuddyrequestClearComponent
+    BuddyrequestClearComponent,
+    ImpressumComponent,
+    PrivacypolicyComponent
   ],
   imports: [
     BrowserModule,

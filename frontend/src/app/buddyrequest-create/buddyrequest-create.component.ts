@@ -18,7 +18,8 @@ export class BuddyrequestCreateComponent implements OnInit {
   error: boolean;
   errorMsg = '';
   courses: Observable<Course[]>;
-  isLoading: boolean = false;
+  isLoading = false;
+  isPrivacyAccepted = false;
 
   constructor(private formBuilder: FormBuilder, private buddyService: BuddyRequestService, private courseService: CourseService,
               private router: Router) {
@@ -56,10 +57,10 @@ export class BuddyrequestCreateComponent implements OnInit {
     this.isLoading = true;
 
     this.buddyService.create(data).subscribe((value) => {
-      console.log('ok');
-      this.isLoading = false;
-      this.router.navigate(['/success']);
-    },
+        console.log('ok');
+        this.isLoading = false;
+        this.router.navigate(['/success']);
+      },
       (err) => this.defaultErrorHandler(err));
   }
 
@@ -85,5 +86,9 @@ export class BuddyrequestCreateComponent implements OnInit {
     }
 
     throw throwError(error);
+  }
+
+  public toggle_privacy(): void {
+    this.isPrivacyAccepted = this.isPrivacyAccepted ? false : true;
   }
 }
