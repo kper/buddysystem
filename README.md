@@ -2,6 +2,6 @@
 
 Matches people together who want to learn for an exam together. The focus of this project lays on the University of Vienna (especially the department for law - Juridicum).
 
-Deployed at ![juridicum.wtf](https://juridicum.wtf)
+Deployed at [juridicum.wtf](https://juridicum.wtf)
 
 ![](main.png)
