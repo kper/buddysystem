@@ -17,9 +17,8 @@ export class BuddyrequestCreateComponent implements OnInit {
   form: FormGroup;
   error: boolean;
   errorMsg = '';
-  courses: Observable<Course[]>;
+  courses: Observable<Course[]> = new Observable<Course[]>();
   isLoading = false;
-  isPrivacyAccepted = false;
 
   constructor(private formBuilder: FormBuilder, private buddyService: BuddyRequestService, private courseService: CourseService,
               private router: Router) {
@@ -30,7 +29,8 @@ export class BuddyrequestCreateComponent implements OnInit {
     this.form = this.formBuilder.group({
       email: ['', [Validators.email, Validators.required, Validators.minLength(3), Validators.pattern(nonWhiteSpaceRegExp)]],
       courseId: ['', [Validators.required, Validators.min(0), Validators.max(100000)]],
-      examDate: ['', [Validators.required]]
+      examDate: ['', [Validators.required]],
+      privacy: [false, [Validators.requiredTrue]]
     });
 
     this.courses = this.fetchAllCourses();
@@ -50,6 +50,10 @@ export class BuddyrequestCreateComponent implements OnInit {
 
   get examDate(): AbstractControl {
     return this.form.get('examDate');
+  }
+
+  get privacy(): AbstractControl {
+    return this.form.get('privacy');
   }
 
   public submit(data: CreateBuddyRequest): void {
@@ -86,9 +90,5 @@ export class BuddyrequestCreateComponent implements OnInit {
     }
 
     throw throwError(error);
-  }
-
-  public toggle_privacy(): void {
-    this.isPrivacyAccepted = this.isPrivacyAccepted ? false : true;
   }
 }
