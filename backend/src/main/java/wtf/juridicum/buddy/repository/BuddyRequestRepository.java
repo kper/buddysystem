@@ -16,4 +16,6 @@ public interface BuddyRequestRepository extends JpaRepository<BuddyRequest, Long
     List<BuddyRequest> findAllByCourseAndAndExamDateAndEmailNotAndConfirmedOrderByOnCreateAsc(Course course, LocalDate examDate, String initiator, boolean confirmed);
 
     Optional<BuddyRequest> findBuddyRequestByEmailAndCourseAndExamDate(String email, Course course, LocalDate examDate);
+
+    void deleteAllByExamDateBefore(LocalDate today);
 }
