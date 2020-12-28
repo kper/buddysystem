@@ -5,8 +5,10 @@ import {CourseService} from '../services/course.service';
 import {CreateBuddyRequest} from '../dto/createBuddyRequest';
 import {Observable, throwError} from 'rxjs';
 import {Course} from '../dto/course';
+import {Queue} from '../dto/queue';
 import {catchError, tap} from 'rxjs/operators';
 import {Router} from '@angular/router';
+import {QueueService} from '../services/queue.service';
 
 @Component({
   selector: 'app-buddyrequest-create',
@@ -18,9 +20,11 @@ export class BuddyrequestCreateComponent implements OnInit {
   error: boolean;
   errorMsg = '';
   courses: Observable<Course[]> = new Observable<Course[]>();
+  queue: Observable<Queue[]> = new Observable<Queue[]>();
   isLoading = false;
 
   constructor(private formBuilder: FormBuilder, private buddyService: BuddyRequestService, private courseService: CourseService,
+              private queueService: QueueService,
               private router: Router) {
   }
 
@@ -34,10 +38,15 @@ export class BuddyrequestCreateComponent implements OnInit {
     });
 
     this.courses = this.fetchAllCourses();
+    this.queue = this.fetchQueue();
   }
 
   private fetchAllCourses(): Observable<Course[]> {
     return this.courseService.getAll().pipe(catchError(err => this.defaultErrorHandler(err)));
+  }
+
+  private fetchQueue(): Observable<Queue[]> {
+    return this.queueService.getAll().pipe(catchError(err => this.defaultErrorHandler(err)));
   }
 
   get email(): AbstractControl {

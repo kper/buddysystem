@@ -8,6 +8,21 @@
     </button>
   </div>
 
+  <div class="last">
+    <div class="row">
+      <table class="table">
+
+        <tr *ngFor="let q of (queue | async)">
+          <td>Jemand sucht für</td>
+          <td><i>{{(q.course.name.length > 50) ? (q.course.name | slice:0:50) + '...' : (q.course.name) }}</i></td>
+          <td>Prüf. am {{q.examDate | date: 'mediumDate'}}</td>
+          <td class="text-muted">erstellt am {{q.onCreate | date: 'mediumDate'}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+
   <form [formGroup]="form" (ngSubmit)="submit(form.value)">
     <div class="form-group">
       <label for="email" class="all-round">
@@ -64,4 +79,6 @@
       </div>
     </div>
   </form>
+
+
 </div>
