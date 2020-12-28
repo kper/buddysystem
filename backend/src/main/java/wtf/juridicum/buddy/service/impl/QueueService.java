@@ -32,7 +32,7 @@ public class QueueService implements IQueueService {
         LOGGER.debug("getAll queues");
 
         Pageable page = PageRequest.of(0, this.queueLength);
-        List<BuddyRequest> requests = buddyRequestRepository.findAllByConfirmedOrderByOnCreateDesc(true, page);
+        List<BuddyRequest> requests = buddyRequestRepository.findAllByConfirmedOrderByOnCreateDescIdDesc(true, page);
 
         List<Queue> queues = requests.stream().map(w -> {
             Queue q = new Queue();
