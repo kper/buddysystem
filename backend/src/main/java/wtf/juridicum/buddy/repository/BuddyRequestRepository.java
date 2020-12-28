@@ -1,5 +1,6 @@
 package wtf.juridicum.buddy.repository;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import wtf.juridicum.buddy.entity.BuddyRequest;
@@ -16,6 +17,8 @@ public interface BuddyRequestRepository extends JpaRepository<BuddyRequest, Long
     List<BuddyRequest> findAllByCourseAndAndExamDateAndEmailNotAndConfirmedOrderByOnCreateAsc(Course course, LocalDate examDate, String initiator, boolean confirmed);
 
     Optional<BuddyRequest> findBuddyRequestByEmailAndCourseAndExamDate(String email, Course course, LocalDate examDate);
+
+    List<BuddyRequest> findAllByConfirmedOrderByOnCreateDesc(boolean confirmed, Pageable page);
 
     void deleteAllByExamDateBefore(LocalDate today);
 }
